@@ -1,69 +1,93 @@
-#define MAX 9876543210
-#include <iostream>
-#include <vector>
-#include <algorithm>
-#include <queue>
+#include <bits/stdc++.h>
+#define ll long long
+#define pii pair<int, int>
+#define pll pair<long long, long long>
+#define tiii tuple<int, int, int>
+const int MAX = 1000 + 1;
+const int INF = 1e9;
 using namespace std;
-struct info{
-    int idx,cnt,val;
-};
-struct cmp{
-    bool operator()(info &a, info &b){
-        return a.val > b.val;
-    }
-};
-info tmp;
-int node,edge,s,e,tax,start,target,mul,val,sum=0;
-vector<info> v[1001];
-int dist[1001][1001];     //각 지점, 몇 번 거쳤는지
 
-void cal(){
-    int result = MAX;
-    for(int i=1;i<node;i++){
-        int vv = dist[target][i]+i*sum;
-        result = min(result,vv);
-    }
-    cout<<result<<'\n';
+struct tup
+{
+	int idx, cnt, val;
+};
+struct comp
+{
+	bool operator()(tup& a, tup& b)
+	{
+		return a.val > b.val;
+	}
+};
+
+int N, M, K;
+int S, D, result = INF, tax = 0;
+int arr[MAX][MAX];
+vector<pii> vec[MAX];
+
+void Dijkstra()
+{
+	priority_queue<tup, vector<tup>, comp> pq;
+	pq.push({ S, 0, 0 });
+	arr[S][0] = 0;
+
+	while (!pq.empty())
+	{
+		int cur, len, cost;
+		cur = pq.top().idx;
+		len = pq.top().cnt;
+		cost = pq.top().val;
+		pq.pop();
+
+		if (arr[cur][len] < cost) continue;
+
+		for (auto it : vec[cur])
+		{
+			int dest = it.first;
+			int temp = it.second;
+
+			if (arr[dest][len + 1] > temp + cost)
+			{
+				arr[dest][len + 1] = temp + cost;
+				pq.push({ dest, len + 1, temp + cost });
+			}
+		}
+	}
 }
 
-void dijkstra(){
-    priority_queue<info,vector<info>,cmp> pq;
-    pq.push({start,0,0});
-    dist[start][0]=0;
-    while(!pq.empty()){
-        int cidx = pq.top().idx;
-        int cc = pq.top().cnt;
-        int cv = pq.top().val;
-        pq.pop();
-        if(dist[cidx][cc]<cv) continue;
-        for(int i=0;i<v[cidx].size();i++){
-            int next = v[cidx][i].idx;
-            int nv = v[cidx][i].val;
-            if(dist[next][cc+1]>cv+nv){
-                dist[next][cc+1]=cv+nv;
-                pq.push({next,cc+1,cv+nv});
-            }
-        }
-    }
+void Solve()
+{
+	result = INF;
+	for (int i = 1; i < N; i++)
+	{
+		result = min(result, arr[D][i] + tax * i);
+	}
+	cout << result << "\n";
 }
 
-int main() {
-    ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
-    cin>>node>>edge>>tax>>start>>target;
-    for(int i=1;i<=node;i++)
-        for(int j=0;j<node;j++)
-            dist[i][j]=MAX;
-    for(int i=0;i<edge;i++){
-        cin>>s>>e>>val;
-        v[s].push_back({e,0,val});
-        v[e].push_back({s,0,val});
-    }
-    dijkstra();
-    cal();
-    for(int i=0;i<tax;i++){
-        cin>>mul;
-        sum+=mul;
-        cal();
-    }
-    return 0;
+int main()
+{
+	ios::sync_with_stdio(0); cin.tie(0);
+	cin >> N >> M >> K;
+	cin >> S >> D;
+
+	for (int i = 1; i <= N; i++)
+		for (int j = 0; j < N; j++)
+			arr[i][j] = INF;
+
+	for (int i = 0; i < M; i++)
+	{
+		int a, b, w; cin >> a >> b >> w;
+		vec[a].push_back({ b, w });
+		vec[b].push_back({ a, w });
+	}
+
+	Dijkstra();
+	Solve();
+
+	while (K--)
+	{
+		int t; cin >> t; tax += t;
+		Solve();
+	}
+	return 0;
 }
