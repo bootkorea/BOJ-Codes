@@ -98,7 +98,7 @@ int main()
     {
         for(int i = 0; i < vec.size(); i++)
         {
-            cout << vec[i].x << " " << vec[i].y << "\n";
+            cout << vec[i].y << " " << vec[i].x << "\n";
         }
     }
 
