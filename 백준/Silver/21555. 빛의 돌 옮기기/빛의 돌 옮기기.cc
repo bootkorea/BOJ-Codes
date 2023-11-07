@@ -4,7 +4,7 @@
 #define MAX 200000 + 1
 using namespace std;
 
-ll N, K, result = 0;
+ll N, K;
 ll arr[MAX][2][2];
 vector<pii> vec;
 
@@ -13,7 +13,7 @@ ll Solve(int i, int carry, int pickup)
     if (i == N)
         return 0;
 
-    result = arr[i][carry][pickup];
+    ll &result = arr[i][carry][pickup];
     if (result != -1)
         return result;
 
