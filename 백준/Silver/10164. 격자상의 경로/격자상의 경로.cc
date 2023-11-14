@@ -15,7 +15,7 @@ int main()
 
     int kx, ky;
     if (!K)
-        kx = N, ky = N;
+        kx = N, ky = M;
     else if (K % M == 0)
         kx = K / M - 1, ky = M - 1;
     else
@@ -35,14 +35,20 @@ int main()
         }
     }
 
+    if (!K)
+    {
+        cout << DP[N - 1][M - 1];
+        return 0;
+    }
+
     for (int i = 0; i < MAX; i++)
         DP[kx][i] = DP[kx][ky];
     for (int i = 0; i < MAX; i++)
         DP[i][ky] = DP[kx][ky];
 
-    for (int i = kx + 1; i < N; i++)
+    for (int i = kx + 1; i <= N; i++)
     {
-        for (int j = ky + 1; j < M; j++)
+        for (int j = ky + 1; j <= M; j++)
         {
             DP[i][j] = DP[i - 1][j] + DP[i][j - 1];
         }
