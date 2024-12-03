@@ -23,7 +23,7 @@ int main()
     result = str.length() * 2 - 1;
     for (int i = 0; i < str.length(); i++)
     {
-        string temp = str.substr(i, str.length() - i);
+        string temp = str.substr(i, str.length());
 
         if (Solve(temp))
         {
